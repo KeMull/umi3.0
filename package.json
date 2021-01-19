@@ -1,0 +1,43 @@
+{
+  "private": true,
+  "scripts": {
+    "start": "umi dev",
+    "start:mock": "cross-env MY_NODE_ENV=mock PORT=9528 umi dev",
+    "start:no-mock": "cross-env MY_NODE_ENV=development MOCK=none PORT=9529 umi dev",
+    "start-test:no-mock": "cross-env MY_NODE_ENV=test MOCK=none umi dev",
+    "start-master:no-mock": "cross-env MY_NODE_ENV=master MOCK=none umi dev",
+    "build": "umi build",
+    "build-dev": "cross-env MY_NODE_ENV=development umi build",
+    "build-test": "cross-env MY_NODE_ENV=test umi build",
+    "build-master": "cross-env MY_NODE_ENV=master umi build",
+    "postinstall": "umi generate tmp",
+    "prettier": "prettier --write '**/*.{js,jsx,tsx,ts,less,md,json}'",
+    "test": "umi-test",
+    "test:coverage": "umi-test --coverage"
+  },
+  "gitHooks": {
+    "pre-commit": "lint-staged"
+  },
+  "lint-staged": {
+    "*.{js,jsx,less,md,json}": [
+      "prettier --write"
+    ],
+    "*.ts?(x)": [
+      "prettier --parser=typescript --write"
+    ]
+  },
+  "dependencies": {
+    "@ant-design/pro-layout": "^5.0.12",
+    "@types/mockjs": "^1.0.3",
+    "@umijs/preset-react": "1.x",
+    "@umijs/test": "^3.2.17",
+    "cross-env": "^7.0.3",
+    "lint-staged": "^10.0.7",
+    "mockjs": "^1.1.0",
+    "prettier": "^1.19.1",
+    "react": "^16.12.0",
+    "react-dom": "^16.12.0",
+    "umi": "^3.2.17",
+    "yorkie": "^2.0.0"
+  }
+}
