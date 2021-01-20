@@ -48,27 +48,26 @@ export default defineConfig({
   },
   // theme 配置主题，实际上是配 less 变量
   theme: {
-    '@primary-color': '#1DA57A', // 默认,
+    '@primary-color': '#fff', // 默认,
   },
-  layout: {
-    // 支持任何不需要 dom 的
-    https: '//procomponents.ant.design/components/layout#prolayout',
-    name: 'Ant Design',
-    locale: false,
-    layout: 'side',
-    theme: 'pro',
-  },
-  title: '管理平台业务模版',
+  // layout: {
+  //   // 支持任何不需要 dom 的
+  //   https: '//procomponents.ant.design/components/layout#prolayout',
+  //   name: '一碗仙缘',
+  //   locale: false,
+  //   // layout: 'side',
+  //   // theme: 'pro',
+  // },
+  // base: '/*/',
   routes: [
     {
-      path: '/login',
+      path: '/user',
       component: '@/layouts/BlankLayout',
       routes: [
         {
-          path: '/login',
-          // icon: 'AreaChartOutlined',
-          // name: '分析页',
-          component: '@/pages/Login',
+          name: 'login',
+          path: '/user/login',
+          component: './Login',
         },
       ],
     },
@@ -77,6 +76,7 @@ export default defineConfig({
       name: '首页',
       icon: 'dashboard',
       exact: true,
+      component: '@/layouts/BlankLayout',
       routes: [
         {
           // path: '/home',
@@ -116,7 +116,6 @@ export default defineConfig({
           name: '套餐专享',
           component: '@/pages/Platform_Services/index',
         },
-       
       ],
     },
   ],
