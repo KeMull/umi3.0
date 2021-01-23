@@ -2,7 +2,7 @@
  * @Author: KeMull
  * @Date: 2021-01-20 09:53:01
  * @LastEditors: KeMull
- * @LastEditTime: 2021-01-20 18:00:36
+ * @LastEditTime: 2021-01-23 11:27:19
  */
 import React from 'react';
 // import brow_less from '@/assets/images/brow_less.png';
@@ -29,17 +29,26 @@ const isHightVersion = () => {
 };
 let Layout: React.FC;
 if (!isHightVersion()) {
-  Layout = ({ children }) => (
-    <>
-      <div className="error_brow">
-        {/* <img src={brow_less} /> */}
-        <div className="error_text">抱歉，当前浏览器版本过低~无法正常访问</div>
-        <div className="error_proposal">
-          请使用浏览器自带的极速模式，或尝试其他浏览器，推荐使用Chrome浏览器
+  Layout = (props, { children }) => {
+    console.log(
+      '%c 🍿 props: ',
+      'font-size:20px;background-color: #F5CE50;color:#fff;',
+      props,
+    );
+    return (
+      <>
+        <div className="error_brow">
+          {/* <img src={brow_less} /> */}
+          <div className="error_text">
+            抱歉，当前浏览器版本过低~无法正常访问
+          </div>
+          <div className="error_proposal">
+            请使用浏览器自带的极速模式，或尝试其他浏览器，推荐使用Chrome浏览器
+          </div>
         </div>
-      </div>
-    </>
-  );
+      </>
+    );
+  };
 } else {
   Layout = ({ children }) => <>{children}</>;
 }

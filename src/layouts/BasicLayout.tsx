@@ -1,139 +1,175 @@
-// import React, { useState } from 'react';
-// import { Button, Descriptions, Result, Avatar, Space, Statistic } from 'antd';
-// import { LikeOutlined, UserOutlined } from '@ant-design/icons';
+// /**
+//  * Ant Design Pro v4 use `@ant-design/pro-layout` to handle Layout.
+//  *
+//  * @see You can view component api by: https://github.com/ant-design/ant-design-pro-layout
+//  */
+// import type {
+//   MenuDataItem,
+//   BasicLayoutProps as ProLayoutProps,
+//   Settings,
+// } from '@ant-design/pro-layout';
+// import ProLayout, { DefaultFooter } from '@ant-design/pro-layout';
+// import React, { useEffect, useMemo, useRef } from 'react';
+// import type { Dispatch  } from 'umi';
+// import { Link, useIntl,  history } from 'umi';
+// import { connect} from 'dav';
+// import { GithubOutlined } from '@ant-design/icons';
+// import { Result, Button } from 'antd';
+// import Authorized from '@/utils/Authorized';
+// import RightContent from '@/components/GlobalHeader/RightContent';
+// import type { ConnectState } from '@/models/connect';
+// import { getMatchMenu } from '@umijs/route-utils';
+// import logo from '../assets/logo.svg';
 
-// import type { ProSettings } from '@ant-design/pro-layout';
-// import ProLayout, { PageContainer, SettingDrawer } from '@ant-design/pro-layout';
-// // import defaultProps from './_defaultProps';
+// const noMatch = (
+//   <Result
+//     status={403}
+//     title="403"
+//     subTitle="Sorry, you are not authorized to access this page."
+//     extra={
+//       <Button type="primary">
+//         <Link to="/user/login">Go Login</Link>
+//       </Button>
+//     }
+//   />
+// );
+// export type BasicLayoutProps = {
+//   breadcrumbNameMap: Record<string, MenuDataItem>;
+//   route: ProLayoutProps['route'] & {
+//     authority: string[];
+//   };
+//   settings: Settings;
+//   dispatch: Dispatch;
+// } & ProLayoutProps;
+// export type BasicLayoutContext = { [K in 'location']: BasicLayoutProps[K] } & {
+//   breadcrumbNameMap: Record<string, MenuDataItem>;
+// };
+// /** Use Authorized check all menu item */
 
-// const content = (
-//   <Descriptions size="small" column={2}>
-//     <Descriptions.Item label="创建人">张三</Descriptions.Item>
-//     <Descriptions.Item label="联系方式">
-//       <a>421421</a>
-//     </Descriptions.Item>
-//     <Descriptions.Item label="创建时间">2017-01-10</Descriptions.Item>
-//     <Descriptions.Item label="更新时间">2017-10-10</Descriptions.Item>
-//     <Descriptions.Item label="备注">中国浙江省杭州市西湖区古翠路</Descriptions.Item>
-//   </Descriptions>
+// const menuDataRender = (menuList: MenuDataItem[]): MenuDataItem[] =>
+//   menuList.map((item) => {
+//     const localItem = {
+//       ...item,
+//       children: item.children ? menuDataRender(item.children) : undefined,
+//     };
+//     return Authorized.check(item.authority, localItem, null) as MenuDataItem;
+//   });
+
+// const defaultFooterDom = (
+//   <DefaultFooter
+//     copyright={`${new Date().getFullYear()} 蚂蚁集团体验技术部出品`}
+//     links={[
+//       {
+//         key: 'Ant Design Pro',
+//         title: 'Ant Design Pro',
+//         href: 'https://pro.ant.design',
+//         blankTarget: true,
+//       },
+//       {
+//         key: 'github',
+//         title: <GithubOutlined />,
+//         href: 'https://github.com/ant-design/ant-design-pro',
+//         blankTarget: true,
+//       },
+//       {
+//         key: 'Ant Design',
+//         title: 'Ant Design',
+//         href: 'https://ant.design',
+//         blankTarget: true,
+//       },
+//     ]}
+//   />
 // );
 
-// export default () => {
-//   const [settings, setSetting] = useState<Partial<ProSettings> | undefined>(undefined);
-//   const [pathname, setPathname] = useState('/welcome');
+// const BasicLayout: React.FC<BasicLayoutProps> = (props) => {
+//   const {
+//     dispatch,
+//     children,
+//     settings,
+//     location = {
+//       pathname: '/',
+//     },
+//   } = props;
+
+//   const menuDataRef = useRef<MenuDataItem[]>([]);
+
+//   useEffect(() => {
+//     // if (dispatch) {
+//     //   dispatch({
+//     //     type: 'user/fetchCurrent',
+//     //   });
+//     // }
+//   }, []);
+//   /** Init variables */
+
+//   const handleMenuCollapse = (payload: boolean): void => {
+//     // if (dispatch) {
+//     //   dispatch({
+//     //     type: 'global/changeLayoutCollapsed',
+//     //     payload,
+//     //   });
+//     // }
+//   };
+//   // get children authority
+//   const authorized = useMemo(
+//     () =>
+//       getMatchMenu(location.pathname || '/', menuDataRef.current).pop() || {
+//         authority: undefined,
+//       },
+//     [location.pathname],
+//   );
+
+//   const { formatMessage } = useIntl();
+
 //   return (
-//     <div
-//       id="test-pro-layout"
-//       style={{
-//         height: '100vh',
+//     <ProLayout
+//       logo={logo}
+//       formatMessage={formatMessage}
+//       {...props}
+//       {...settings}
+//       onCollapse={handleMenuCollapse}
+//       onMenuHeaderClick={() => history.push('/')}
+//       menuItemRender={(menuItemProps, defaultDom) => {
+//         if (
+//           menuItemProps.isUrl ||
+//           !menuItemProps.path ||
+//           location.pathname === menuItemProps.path
+//         ) {
+//           return defaultDom;
+//         }
+//         return <Link to={menuItemProps.path}>{defaultDom}</Link>;
+//       }}
+//       breadcrumbRender={(routers = []) => [
+//         {
+//           path: '/',
+//           breadcrumbName: formatMessage({ id: 'menu.home' }),
+//         },
+//         ...routers,
+//       ]}
+//       itemRender={(route, params, routes, paths) => {
+//         const first = routes.indexOf(route) === 0;
+//         return first ? (
+//           <Link to={paths.join('/')}>{route.breadcrumbName}</Link>
+//         ) : (
+//           <span>{route.breadcrumbName}</span>
+//         );
+//       }}
+//       footerRender={() => defaultFooterDom}
+//       menuDataRender={menuDataRender}
+//       rightContentRender={() => <RightContent />}
+//       postMenuData={(menuData) => {
+//         menuDataRef.current = menuData || [];
+//         return menuData || [];
 //       }}
 //     >
-//       <ProLayout
-//         // {...defaultProps}
-//         location={{
-//           pathname,
-//         }}
-//         fixSiderbar
-//         menuFooterRender={(props) => {
-//           return (
-//             <a
-//               style={{
-//                 lineHeight: '48rpx',
-//                 display: 'flex',
-//                 height: 48,
-//                 color: 'rgba(255, 255, 255, 0.65)',
-//                 alignItems: 'center',
-//               }}
-//               href="https://preview.pro.ant.design/dashboard/analysis"
-//               target="_blank"
-//               rel="noreferrer"
-//             >
-//               <img
-//                 alt="pro-logo"
-//                 src="https://procomponents.ant.design/favicon.ico"
-//                 style={{
-//                   width: 16,
-//                   height: 16,
-//                   margin: '0 16px',
-//                   marginRight: 10,
-//                 }}
-//               />
-//               {!props?.collapsed && 'Preview Pro'}
-//             </a>
-//           );
-//         }}
-//         onMenuHeaderClick={(e) => console.log(e)}
-//         menuItemRender={(item, dom) => (
-//           <a
-//             onClick={() => {
-//               setPathname(item.path || '/welcome');
-//             }}
-//           >
-//             {dom}
-//           </a>
-//         )}
-//         rightContentRender={() => (
-//           <div>
-//             <Avatar shape="square" size="small" icon={<UserOutlined />} />
-//           </div>
-//         )}
-//         {...settings}
-//       >
-//         <PageContainer
-//           content={content}
-//           tabList={[
-//             {
-//               tab: '基本信息',
-//               key: 'base',
-//             },
-//             {
-//               tab: '详细信息',
-//               key: 'info',
-//             },
-//           ]}
-//           extraContent={
-//             <Space size={24}>
-//               <Statistic title="Feedback" value={1128} prefix={<LikeOutlined />} />
-//               <Statistic title="Unmerged" value={93} suffix="/ 100" />
-//             </Space>
-//           }
-//           extra={[
-//             <Button key="3">操作</Button>,
-//             <Button key="2">操作</Button>,
-//             <Button key="1" type="primary">
-//               主操作
-//             </Button>,
-//           ]}
-//           footer={[
-//             <Button key="3">重置</Button>,
-//             <Button key="2" type="primary">
-//               提交
-//             </Button>,
-//           ]}
-//         >
-//           <div
-//             style={{
-//               height: '120vh',
-//             }}
-//           >
-//             <Result
-//               status="404"
-//               style={{
-//                 height: '100%',
-//                 background: '#fff',
-//               }}
-//               title="Hello World"
-//               subTitle="Sorry, you are not authorized to access this page."
-//               extra={<Button type="primary">Back Home</Button>}
-//             />
-//           </div>
-//         </PageContainer>
-//       </ProLayout>
-//       <SettingDrawer
-//         getContainer={() => document.getElementById('test-pro-layout')}
-//         settings={settings}
-//         onSettingChange={(changeSetting) => setSetting(changeSetting)}
-//       />
-//     </div>
+//       <Authorized authority={authorized!.authority} noMatch={noMatch}>
+//         {children}
+//       </Authorized>
+//     </ProLayout>
 //   );
 // };
+
+// export default connect(({ global, settings }: ConnectState) => ({
+//   collapsed: global.collapsed,
+//   settings,
+// }))(BasicLayout);

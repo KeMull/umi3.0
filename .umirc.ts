@@ -5,6 +5,16 @@ export default defineConfig({
   nodeModulesTransform: {
     type: 'none',
   },
+  analyze: {
+    analyzerMode: 'server',
+    analyzerPort: 8888,
+    openAnalyzer: true,
+    // generate stats file while ANALYZE_DUMP exist
+    generateStatsFile: false,
+    statsFilename: 'stats.json',
+    logLevel: 'info',
+    defaultSizes: 'parsed', // stat  // gzip
+  },
   // 环境变量
   define: {
     /*  
@@ -61,60 +71,61 @@ export default defineConfig({
   // base: '/*/',
   routes: [
     {
+      path: '/',
+      // exact: true,
+      // redirect: '/home',
+      component: '@/layouts/index',
+      routes: [
+        {
+          name: '首页',
+          icon: 'dashboard',
+
+          path: '/home',
+          component: './Home',
+          hideInMenu: true,
+        },
+        {
+          path: '/dashboard',
+          name: '数据统计',
+          icon: 'dashboard',
+          routes: [
+            {
+              path: '/dashboard/analysis',
+              // icon: 'AreaChartOutlined',
+              name: '分析页',
+              component: '@/pages/Dashboard/index',
+            },
+            {
+              path: '/dashboard/monitor',
+              // icon: 'DesktopOutlined',
+              name: '控制页',
+              component: '@/pages/about/index',
+            },
+          ],
+        },
+        {
+          path: '/platform_services',
+          name: '数据统计',
+          icon: 'dashboard',
+          routes: [
+            {
+              path: '/platform_services',
+              // icon: 'AreaChartOutlined',
+              name: '套餐专享',
+              component: '@/pages/Platform_Services/index',
+            },
+          ],
+        },
+      ],
+    },
+    {
       path: '/user',
-      component: '@/layouts/BlankLayout',
+      component: '@/layouts/index',
       routes: [
         {
           name: 'login',
           path: '/user/login',
           component: './Login',
-        },
-      ],
-    },
-    {
-      path: '/',
-      name: '首页',
-      icon: 'dashboard',
-      exact: true,
-      component: '@/layouts/BlankLayout',
-      routes: [
-        {
-          // path: '/home',
-          redirect: '/home',
-          component: '@/pages/Home/index',
-          hideInMenu: true,
-        },
-      ],
-    },
-    {
-      path: '/dashboard',
-      name: '数据统计',
-      icon: 'dashboard',
-      routes: [
-        {
-          path: '/dashboard/analysis',
-          // icon: 'AreaChartOutlined',
-          name: '分析页',
-          component: '@/pages/Dashboard/index',
-        },
-        {
-          path: '/dashboard/monitor',
-          // icon: 'DesktopOutlined',
-          name: '控制页',
-          component: '@/pages/about/index',
-        },
-      ],
-    },
-    {
-      path: '/platform_services',
-      name: '数据统计',
-      icon: 'dashboard',
-      routes: [
-        {
-          path: '/platform_services',
-          // icon: 'AreaChartOutlined',
-          name: '套餐专享',
-          component: '@/pages/Platform_Services/index',
         },
       ],
     },
