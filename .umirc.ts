@@ -1,13 +1,26 @@
+/*
+ * @Author: KeMull
+ * @Date: 2021-01-20 09:53:01
+ * @LastEditors: KeMull
+ * @LastEditTime: 2021-01-27 10:44:29
+ */
 import { defineConfig } from 'umi';
+import WebpackPlugin from './config/plugin.config';
 // import config from './config/config';
 // const { routes, layout } = config;
 export default defineConfig({
+  externals: {
+    externals: {
+      image: [/\.(png|jpe?g|gif|webp|ico)(\?.*)?$/],
+    },
+  },
+
   nodeModulesTransform: {
     type: 'none',
   },
   analyze: {
     analyzerMode: 'server',
-    analyzerPort: 8888,
+    analyzerPort: 9250,
     openAnalyzer: true,
     // generate stats file while ANALYZE_DUMP exist
     generateStatsFile: false,
@@ -26,6 +39,7 @@ export default defineConfig({
     // 自定义node的系统环境变量
     'process.env': {
       MY_NODE_ENV: process.env.MY_NODE_ENV,
+      VERSION_CODE: process.env.VERSION_CODE,
       // MY_PORT_ENV: process.env.PORT_ENV,
     },
   },
@@ -33,7 +47,7 @@ export default defineConfig({
   devServer: {
     // port: process.env.PORT_ENV | 8000 , //默认
     // host:'0.0.0.0',//默认
-    open: true,
+    // open: true,
   },
   // mock配置
   mock: {
@@ -60,6 +74,7 @@ export default defineConfig({
   theme: {
     '@primary-color': '#fff', // 默认,
   },
+  chainWebpack: WebpackPlugin,
   // layout: {
   //   // 支持任何不需要 dom 的
   //   https: '//procomponents.ant.design/components/layout#prolayout',
